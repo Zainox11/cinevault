@@ -1,0 +1,52 @@
+name: cinevault
+description: A personal movie watchlist manager powered by TMDB.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Networking
+  dio: ^5.4.3
+  cached_network_image: ^3.3.1
+
+  # Local Database
+  hive_flutter: ^1.1.0
+
+  # Navigation
+  go_router: ^13.2.1
+
+  # Secure Storage (for API key)
+  flutter_secure_storage: ^9.0.0
+
+  # UI Utilities
+  shimmer: ^3.0.0
+  flutter_animate: ^4.5.0
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.9
+  hive_generator: ^2.0.1
+  riverpod_generator: ^2.4.0
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+# Yeh hissa bilkul line ke shuru se hona chahiye
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo.png"
