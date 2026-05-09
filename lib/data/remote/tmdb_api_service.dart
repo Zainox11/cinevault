@@ -2,15 +2,17 @@
 
 import 'package:dio/dio.dart';
 import '../models/movie.dart';
+import '../models/cast.dart';
+import '../models/video.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/constants/api_constants.dart';
 import '../../core/errors/app_exception.dart';
 
 class TmdbApiService {
+  // Aapka existing Dio instance
   final Dio _dio = DioClient.instance;
 
   /// Fetch this week's trending movies.
-  /// Returns a paginated list — pass [page] for pagination support.
   Future<List<Movie>> fetchTrendingMovies({int page = 1}) async {
     try {
       final response = await _dio.get(
@@ -28,7 +30,6 @@ class TmdbApiService {
   }
 
   /// Fetch full details for a single movie.
-  /// TMDB detail endpoint returns richer data than the list endpoint.
   Future<Movie> fetchMovieDetails(int movieId) async {
     try {
       final response = await _dio.get(
@@ -56,6 +57,39 @@ class TmdbApiService {
     } on DioException catch (e) {
       throw e.error as AppException? ??
           AppException(message: 'Search failed. Please try again.');
+    }
+  }
+
+  /// Naye functions - Updated with correct Dio instance (_dio)
+
+  Future<List<Cast>> getMovieCast(int movieId) async {
+    try {
+      final response = await _dio.get('${ApiConstants.movieDetails}/$movieId/credits');
+      // Dio mein data access karne ke liye .data['cast'] zaroori hai
+      final results = response.data['cast'] as List;
+      return results.map((json) => Cast.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load cast: $e');
+    }
+  }
+
+  Future<List<Video>> getMovieVideos(int movieId) async {
+    try {
+      final response = await _dio.get('${ApiConstants.movieDetails}/$movieId/videos');
+      final results = response.data['results'] as List;
+      return results.map((json) => Video.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load videos: $e');
+    }
+  }
+
+  Future<List<Movie>> getSimilarMovies(int movieId) async {
+    try {
+      final response = await _dio.get('${ApiConstants.movieDetails}/$movieId/similar');
+      final results = response.data['results'] as List;
+      return results.map((json) => Movie.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load similar movies: $e');
     }
   }
 }

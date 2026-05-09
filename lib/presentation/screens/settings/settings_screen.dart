@@ -71,7 +71,7 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.info_outline_rounded),
             title: const Text('About CineVault'),
-            subtitle: const Text('Version 1.0.0\nDeveloped by Zain Zahid'),
+            subtitle: const Text('Version 1.0.0'),
           ),
           ListTile(
             leading: const Icon(Icons.api_rounded),
