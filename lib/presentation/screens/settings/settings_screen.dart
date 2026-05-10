@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart'; // Navigation ke liye import
 import '../../../core/constants/app_colors.dart';
 import '../../providers/theme_provider.dart';
+import '../../../router/app_router.dart'; // Routes ke liye import
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -37,6 +39,21 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const Divider(color: AppColors.divider),
 
+          // Support Section (Zain: Yahan humne Feedback option add kiya hai)
+          const Text('Support', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          ListTile(
+            leading: const Icon(Icons.feedback_rounded, color: Colors.amber),
+            title: const Text('Send Feedback'),
+            subtitle: const Text('Tell us what you think or report a bug'),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () {
+              // Feedback screen par jane ke liye
+              context.push(AppRoutes.feedback);
+            },
+          ),
+          const Divider(color: AppColors.divider),
+
           // Preferences Section
           const Text('Preferences', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
@@ -57,7 +74,6 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: const Text('Free up storage space'),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () {
-              // Yahan aap future mein cache clear karne ka logic daal sakte hain
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Cache cleared successfully!')),
               );
