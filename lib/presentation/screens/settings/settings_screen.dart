@@ -1,18 +1,15 @@
-// lib/presentation/screens/settings/settings_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart'; // Navigation ke liye import
+import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../providers/theme_provider.dart';
-import '../../../router/app_router.dart'; // Routes ke liye import
+import '../../../router/app_router.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Theme ki current state yahan se milegi
     final themeMode = ref.watch(themeModeProvider);
 
     return Scaffold(
@@ -32,23 +29,22 @@ class SettingsScreen extends ConsumerWidget {
             value: themeMode == ThemeMode.dark,
             activeColor: AppColors.primary,
             onChanged: (isDark) {
-              // Button dabane par theme change hoga
               ref.read(themeModeProvider.notifier).state =
               isDark ? ThemeMode.dark : ThemeMode.light;
             },
           ),
           const Divider(color: AppColors.divider),
 
-          // Support Section (Zain: Yahan humne Feedback option add kiya hai)
-          const Text('Support', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+          // Suggestion Section (Requirement: Link to Form Screen)
+          const Text('Contributions', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           ListTile(
-            leading: const Icon(Icons.feedback_rounded, color: Colors.amber),
-            title: const Text('Send Feedback'),
-            subtitle: const Text('Tell us what you think or report a bug'),
+            leading: const Icon(Icons.movie_filter_rounded, color: Colors.amber),
+            title: const Text('Suggest a Movie'),
+            subtitle: const Text('Missing something? Let us know!'),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () {
-              // Feedback screen par jane ke liye
+              // AppRouter mein feedback route par jaye ga
               context.push(AppRoutes.feedback);
             },
           ),
@@ -61,21 +57,9 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.notifications_active_rounded),
             title: const Text('Notifications'),
             subtitle: const Text('Manage app alerts (Coming Soon)'),
-            trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Notifications will be available in the next update!')),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.delete_sweep_rounded),
-            title: const Text('Clear Image Cache'),
-            subtitle: const Text('Free up storage space'),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Cache cleared successfully!')),
+                const SnackBar(content: Text('Notifications feature is coming soon!')),
               );
             },
           ),
@@ -84,15 +68,15 @@ class SettingsScreen extends ConsumerWidget {
           // About Section
           const Text('About', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          ListTile(
-            leading: const Icon(Icons.info_outline_rounded),
-            title: const Text('About CineVault'),
-            subtitle: const Text('Version 1.0.0'),
+          const ListTile(
+            leading: Icon(Icons.info_outline_rounded),
+            title: Text('About CineVault'),
+            subtitle: Text('Version 1.0.0'),
           ),
-          ListTile(
-            leading: const Icon(Icons.api_rounded),
-            title: const Text('Powered by TMDB API'),
-            subtitle: const Text('Data and images are provided by The Movie Database.'),
+          const ListTile(
+            leading: Icon(Icons.api_rounded),
+            title: Text('Data Source'),
+            subtitle: Text('Powered by TMDB API'),
           ),
         ],
       ),

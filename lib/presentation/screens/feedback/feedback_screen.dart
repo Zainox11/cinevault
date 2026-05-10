@@ -1,5 +1,3 @@
-// lib/presentation/screens/feedback/feedback_screen.dart
-
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 
@@ -11,37 +9,35 @@ class FeedbackScreen extends StatefulWidget {
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
-  // Yeh key form ko control aur validate karne ke liye hai (Requirement)
+  // Requirement: Form validation ke liye GlobalKey
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _messageController = TextEditingController();
+  final _movieController = TextEditingController();
+  final _reasonController = TextEditingController();
 
-  // Submit button dabane par ye function chalega
   void _submitForm() {
-    // Check karega ke saari fields theek hain ya nahi
+    // Proper Validation logic
     if (_formKey.currentState!.validate()) {
-      // Agar theek hain toh Success message show karo
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Feedback Submitted Successfully!'),
+          content: Text('Movie Suggestion Sent! Thanks for contributing.'),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
         ),
       );
-      // Fields clear kar do
+      // Submit karne ke baad fields saaf kar dena
       _nameController.clear();
-      _emailController.clear();
-      _messageController.clear();
+      _movieController.clear();
+      _reasonController.clear();
     }
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose();
-    _messageController.dispose();
+    _movieController.dispose();
+    _reasonController.dispose();
     super.dispose();
   }
 
@@ -49,38 +45,34 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Send Feedback'),
+        title: const Text('Suggest a Movie'),
         backgroundColor: AppColors.background,
         elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
-          key: _formKey, // Form shuru ho gaya
+          key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'We value your feedback!',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                  'Missing a Movie?',
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 8),
+                const Text(
+                  'Tell us which movie we should add next to CineVault.',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                const SizedBox(height: 32),
 
-                // 1. Name Field
+                // 1. User Name Field
                 TextFormField(
                   controller: _nameController,
                   style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'Full Name',
-                    labelStyle: const TextStyle(color: Colors.grey),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: AppColors.primary),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  // NAME VALIDATION
+                  decoration: _buildDecoration('Your Name', Icons.person_outline),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter your name';
@@ -90,57 +82,36 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // 2. Email Field
+                // 2. Movie Title Field
                 TextFormField(
-                  controller: _emailController,
+                  controller: _movieController,
                   style: const TextStyle(color: Colors.white),
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: 'Email Address',
-                    labelStyle: const TextStyle(color: Colors.grey),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: AppColors.primary),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  // EMAIL VALIDATION
+                  decoration: _buildDecoration('Movie Title', Icons.movie_outlined),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your email';
-                    } else if (!value.contains('@') || !value.contains('.')) {
-                      return 'Please enter a valid email address'; // Strict Email check
+                      return 'What is the movie name?';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 20),
 
-                // 3. Message Field
+                // 3. Reason/Message Field
                 TextFormField(
-                  controller: _messageController,
+                  controller: _reasonController,
                   style: const TextStyle(color: Colors.white),
                   maxLines: 4,
-                  decoration: InputDecoration(
-                    labelText: 'Your Message',
-                    labelStyle: const TextStyle(color: Colors.grey),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: AppColors.primary),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  // MESSAGE VALIDATION
+                  decoration: _buildDecoration('Why should we add it?', Icons.edit_note_rounded),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your message';
+                      return 'Please tell us something about this movie';
                     } else if (value.length < 10) {
-                      return 'Message must be at least 10 characters long';
+                      return 'Please write at least 10 characters';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 32),
 
                 // Submit Button
                 SizedBox(
@@ -152,14 +123,40 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 5,
                     ),
-                    child: const Text('Submit Feedback', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    child: const Text(
+                      'Send Suggestion',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // Input styling ko saaf rakhne ke liye helper function
+  InputDecoration _buildDecoration(String label, IconData icon) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon, color: Colors.grey, size: 20),
+      labelStyle: const TextStyle(color: Colors.grey),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.white12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.redAccent),
+        borderRadius: BorderRadius.circular(12),
       ),
     );
   }
